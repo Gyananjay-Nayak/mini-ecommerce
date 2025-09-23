@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, createSelector } from '@reduxjs/toolkit'
 
 // Load cart from localStorage
 const loadCartFromStorage = () => {
@@ -184,12 +184,54 @@ export const {
 
 export default cartSlice.reducer
 
-// Selectors
-export const selectCartItems = (state) => state.cart.items
-export const selectCartTotal = (state) => Math.max(0, state.cart.total - (state.cart.discount || 0))
-export const selectCartSubtotal = (state) => state.cart.total
-export const selectCartItemsCount = (state) => state.cart.itemsCount
-export const selectCartDiscount = (state) => state.cart.discount || 0
-export const selectPromoCode = (state) => state.cart.promoCode
-export const selectCartItemById = (state, productId) => 
-  state.cart.items.find(item => item.id === productId)
+
+// Basic selector
+const selectCartState = (state) => state.cart
+
+// Memoized selectors
+export const selectCartItems = createSelector(
+  [selectCartState],
+  (cart) => cart.items
+)
+
+export const selectCartTotal = createSelector(
+  [selectCartState],
+  (cart) => Math.max(0, cart.total - (cart.discount || 0))
+)
+
+export const selectCartSubtotal = createSelector(
+  [selectCartState],
+  (cart) => cart.total
+)
+
+export const selectCartItemsCount = createSelector(
+  [selectCartState],
+  (cart) => cart.itemsCount
+)
+
+export const selectCartDiscount = createSelector(
+  [selectCartState],
+  (cart) => cart.discount || 0
+)
+
+export const selectPromoCode = createSelector(
+  [selectCartState],
+  (cart) => cart.promoCode
+)
+
+export const selectCartItemById = createSelector(
+  [selectCartState, (state, productId) => productId],
+  (cart, productId) => cart.items.find(item => item.id === productId)
+)
+
+// Complex selector for cart summary
+export const selectCartSummary = createSelector(
+  [selectCartState],
+  (cart) => ({
+    itemsCount: cart.itemsCount,
+    subtotal: cart.total,
+    discount: cart.discount || 0,
+    total: Math.max(0, cart.total - (cart.discount || 0)),
+    promoCode: cart.promoCode,
+  })
+)

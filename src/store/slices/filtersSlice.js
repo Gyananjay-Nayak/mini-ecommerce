@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, createSelector } from '@reduxjs/toolkit'
 
 const initialState = {
   category: 'all',
@@ -84,27 +84,83 @@ export const {
 
 export default filtersSlice.reducer
 
-// Selectors
-export const selectFilters = (state) => state.filters
-export const selectPagination = (state) => ({
-  currentPage: state.filters.currentPage,
-  itemsPerPage: state.filters.itemsPerPage,
-  skip: (state.filters.currentPage - 1) * state.filters.itemsPerPage,
-})
+// Basic selectors
+const selectFiltersState = (state) => state.filters
 
-export const selectActiveFiltersCount = (state) => {
-  const filters = state.filters
-  let count = 0
-  
-  if (filters.category !== 'all') count++
-  if (filters.priceRange > 0 || filters.priceRange < 2000) count++
-  if (filters.minRating > 0) count++
-  if (filters.searchQuery.trim()) count++
-  
-  return count
-}
+// Memoized selectors using createSelector
+export const selectFilters = createSelector(
+  [selectFiltersState],
+  (filters) => filters
+)
 
-export const selectSortingParams = (state) => ({
-  sortBy: state.filters.sortBy,
-  order: state.filters.order,
-})
+export const selectPagination = createSelector(
+  [selectFiltersState],
+  (filters) => ({
+    currentPage: filters.currentPage,
+    itemsPerPage: filters.itemsPerPage,
+    skip: (filters.currentPage - 1) * filters.itemsPerPage,
+  })
+)
+
+export const selectActiveFiltersCount = createSelector(
+  [selectFiltersState],
+  (filters) => {
+    let count = 0
+    
+    if (filters.category !== 'all') count++
+    if (filters.priceRange > 0 || filters.priceRange < 2000) count++
+    if (filters.minRating > 0) count++
+    if (filters.searchQuery.trim()) count++
+    
+    return count
+  }
+)
+
+export const selectSortingParams = createSelector(
+  [selectFiltersState],
+  (filters) => ({
+    sortBy: filters.sortBy,
+    order: filters.order,
+  })
+)
+
+// Individual field selectors (memoized automatically by createSelector)
+export const selectCategory = createSelector(
+  [selectFiltersState],
+  (filters) => filters.category
+)
+
+export const selectPriceRange = createSelector(
+  [selectFiltersState],
+  (filters) => filters.priceRange
+)
+
+export const selectMinRating = createSelector(
+  [selectFiltersState],
+  (filters) => filters.minRating
+)
+
+export const selectSearchQuery = createSelector(
+  [selectFiltersState],
+  (filters) => filters.searchQuery
+)
+
+export const selectSortBy = createSelector(
+  [selectFiltersState],
+  (filters) => filters.sortBy
+)
+
+export const selectOrder = createSelector(
+  [selectFiltersState],
+  (filters) => filters.order
+)
+
+export const selectCurrentPage = createSelector(
+  [selectFiltersState],
+  (filters) => filters.currentPage
+)
+
+export const selectItemsPerPage = createSelector(
+  [selectFiltersState],
+  (filters) => filters.itemsPerPage
+)

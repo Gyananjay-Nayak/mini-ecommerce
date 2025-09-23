@@ -132,17 +132,17 @@ export default function ProductsPage() {
   }, [handleScroll])
 
   // Update URL when filters change
-  useEffect(() => {
-    const params = new URLSearchParams()
+  // useEffect(() => {
+  //   const params = new URLSearchParams()
     
-    if (filters.category !== 'all') params.set('category', filters.category)
-    if (filters.searchQuery) params.set('search', filters.searchQuery)
-    if (filters.sortBy !== 'id') params.set('sort', filters.sortBy)
-    if (filters.order !== 'asc') params.set('order', filters.order)
+  //   if (filters.category !== 'all') params.set('category', filters.category)
+  //   if (filters.searchQuery) params.set('search', filters.searchQuery)
+  //   if (filters.sortBy !== 'id') params.set('sort', filters.sortBy)
+  //   if (filters.order !== 'asc') params.set('order', filters.order)
     
-    const newUrl = `/products${params.toString() ? '?' + params.toString() : ''}`
-    router.replace(newUrl, { shallow: true })
-  }, [filters.category, filters.searchQuery, filters.sortBy, filters.order, router])
+  //   const newUrl = `/products${params.toString() ? '?' + params.toString() : ''}`
+  //   router.replace(newUrl, { shallow: true })
+  // }, [filters.category, filters.searchQuery, filters.sortBy, filters.order, router])
 
   const getCategoryTitle = useCallback(() => {
     if (filters.searchQuery) {
@@ -213,7 +213,7 @@ export default function ProductsPage() {
           <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4">
             {getCategoryTitle()}
           </h1>
-          
+
           {/* Controls Bar */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex items-center gap-4">
@@ -230,14 +230,21 @@ export default function ProductsPage() {
                   </span>
                 )}
               </button>
-              
+
               {filters.searchQuery && (
-                <div className="text-sm text-gray-600">
-                  Found {products.length} results
+                <div className="flex items-center gap-3">
+                  <div className="text-sm text-gray-600">
+                    Found {products.length} results
+                  </div>
+                  <button className="border border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-red-400 px-2 py-2 text-sm rounded-lg text-red-500"
+                  onClick={()=>dispatch(setSearchQuery(''))}
+                  >
+                    Clear Search
+                  </button>
                 </div>
               )}
             </div>
-            
+
             <div className="flex items-center gap-4">
               <SortDropdown />
               <span className="text-sm text-gray-600 hidden sm:block">
@@ -252,10 +259,7 @@ export default function ProductsPage() {
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6">
               {products.map((product, index) => (
-                <ProductCard 
-                  key={`${product.id}-${index}`} 
-                  product={product} 
-                />
+                <ProductCard key={`${product.id}-${index}`} product={product} />
               ))}
             </div>
 
@@ -263,7 +267,9 @@ export default function ProductsPage() {
             {isLoadingMore && (
               <div className="flex justify-center items-center py-8">
                 <LoadingSpinner />
-                <span className="ml-3 text-gray-600">Loading more products...</span>
+                <span className="ml-3 text-gray-600">
+                  Loading more products...
+                </span>
               </div>
             )}
 
@@ -283,7 +289,8 @@ export default function ProductsPage() {
               No products found
             </h2>
             <p className="text-gray-600 mb-6">
-              Try adjusting your search or filters to find what you&apos;re looking for.
+              Try adjusting your search or filters to find what you&apos;re
+              looking for.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button
@@ -294,10 +301,10 @@ export default function ProductsPage() {
               </button>
               <button
                 onClick={() => {
-                  dispatch(setSearchQuery(''))
-                  dispatch(setCategory('all'))
-                  dispatch(setPriceRange([0, 2000]))
-                  dispatch(setMinRating(0))
+                  dispatch(setSearchQuery(""));
+                  dispatch(setCategory("all"));
+                  dispatch(setPriceRange([0, 2000]));
+                  dispatch(setMinRating(0));
                 }}
                 className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
               >
@@ -309,10 +316,10 @@ export default function ProductsPage() {
       </div>
 
       {/* Filter Modal */}
-      <FilterModal 
-        isOpen={showFilterModal} 
-        onClose={() => setShowFilterModal(false)} 
+      <FilterModal
+        isOpen={showFilterModal}
+        onClose={() => setShowFilterModal(false)}
       />
     </div>
-  )
+  );
 }

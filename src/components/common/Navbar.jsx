@@ -4,6 +4,7 @@ import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { useSelector, useDispatch } from 'react-redux'
 import { setSearchQuery } from '@/store/slices/filtersSlice'
+import { useWishlist } from '@/hooks/useLocalStorage'
 import { 
   ShoppingCartIcon, 
   HeartIcon, 
@@ -19,10 +20,9 @@ export default function Navbar() {
   
   const [isOpen, setIsOpen] = useState(false)
   const [searchInput, setSearchInput] = useState('')
-  const [isSearchFocused, setIsSearchFocused] = useState(false)
   
   const cartItems = useSelector(state => state.cart?.items || [])
-  const wishlistItems = useSelector(state => state.wishlist?.items || [])
+  const { wishlistCount} = useWishlist();
 
   const cartItemsCount = cartItems.reduce((total, item) => total + item.quantity, 0)
 
@@ -34,18 +34,16 @@ export default function Navbar() {
       
       // Navigate to products page with search
       const params = new URLSearchParams()
-      params.set('search', searchInput.trim())
+      // params.set('search', searchInput.trim())
       router.push(`/products?${params.toString()}`)
       
       // Clear search input
       setSearchInput('')
-      setIsSearchFocused(false)
     }
   }
 
   const handleSearchClear = () => {
     setSearchInput('')
-    setIsSearchFocused(false)
   }
 
   return (
@@ -100,8 +98,6 @@ export default function Navbar() {
                   type="text"
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
-                  onFocus={() => setIsSearchFocused(true)}
-                  onBlur={() => setTimeout(() => setIsSearchFocused(false), 100)}
                   className="block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all"
                   placeholder="Search products..."
                 />
@@ -115,21 +111,6 @@ export default function Navbar() {
                   </button>
                 )}
               </div>
-              
-              {/* Search Suggestions/Quick Actions */}
-              {isSearchFocused && searchInput && (
-                <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-md shadow-lg border border-gray-200 z-50">
-                  <div className="p-2">
-                    <button
-                      onClick={handleSearch}
-                      className="w-full text-left px-3 py-2 hover:bg-gray-50 rounded-md text-sm flex items-center"
-                    >
-                      <MagnifyingGlassIcon className="h-4 w-4 text-gray-400 mr-2" />
-                      Search for "{searchInput}"
-                    </button>
-                  </div>
-                </div>
-              )}
             </form>
           </div>
 
@@ -138,9 +119,9 @@ export default function Navbar() {
             {/* Wishlist */}
             <Link href="/wishlist" className="relative p-2 text-gray-600 hover:text-red-600 transition-colors">
               <HeartIcon className="h-6 w-6" />
-              {wishlistItems.length > 0 && (
+              {wishlistCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  {wishlistItems.length}
+                  {wishlistCount}
                 </span>
               )}
             </Link>

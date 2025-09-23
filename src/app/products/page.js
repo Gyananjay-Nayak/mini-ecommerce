@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect, useCallback } from 'react'
-import { useSearchParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useDispatch, useSelector } from 'react-redux'
 import { useGetProductsQuery } from '@/store/slices/apiSlice'
 import { 
@@ -24,7 +24,6 @@ import { AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline'
 export default function ProductsPage() {
   const dispatch = useDispatch()
   const router = useRouter()
-  const searchParams = useSearchParams()
   
   // Memoized Redux selectors
   const filters = useSelector(selectFilters)
@@ -37,27 +36,6 @@ export default function ProductsPage() {
   const [hasMore, setHasMore] = useState(true)
   const [isLoadingMore, setIsLoadingMore] = useState(false)
   const [showFilterModal, setShowFilterModal] = useState(false)
-
-  // Initialize filters from URL params
-  useEffect(() => {
-    const categoryParam = searchParams.get('category')
-    const searchParam = searchParams.get('search')
-    const sortParam = searchParams.get('sort')
-    const orderParam = searchParams.get('order')
-    
-    if (categoryParam && categoryParam !== filters.category) {
-      dispatch(setCategory(categoryParam))
-    }
-    if (searchParam && searchParam !== filters.searchQuery) {
-      dispatch(setSearchQuery(searchParam))
-    }
-    if (sortParam && sortParam !== filters.sortBy) {
-      dispatch(setSortBy(sortParam))
-    }
-    if (orderParam && orderParam !== filters.order) {
-      dispatch(setOrder(orderParam))
-    }
-  }, [searchParams, dispatch, filters.category, filters.searchQuery, filters.sortBy, filters.order])
 
   // API query
   const { data, isLoading, error, isFetching } = useGetProductsQuery({
@@ -130,19 +108,6 @@ export default function ProductsPage() {
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [handleScroll])
-
-  // Update URL when filters change
-  // useEffect(() => {
-  //   const params = new URLSearchParams()
-    
-  //   if (filters.category !== 'all') params.set('category', filters.category)
-  //   if (filters.searchQuery) params.set('search', filters.searchQuery)
-  //   if (filters.sortBy !== 'id') params.set('sort', filters.sortBy)
-  //   if (filters.order !== 'asc') params.set('order', filters.order)
-    
-  //   const newUrl = `/products${params.toString() ? '?' + params.toString() : ''}`
-  //   router.replace(newUrl, { shallow: true })
-  // }, [filters.category, filters.searchQuery, filters.sortBy, filters.order, router])
 
   const getCategoryTitle = useCallback(() => {
     if (filters.searchQuery) {

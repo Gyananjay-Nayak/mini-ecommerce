@@ -12,7 +12,7 @@ A modern e-commerce application built with Next.js, Tailwind CSS, and Redux Tool
 
 1. **Clone the repository**
    ```bash
-   git clone <your-repo-url>
+   git clone https://github.com/Gyananjay-Nayak/mini-ecommerce.git
    cd mini-ecommerce
    ```
 

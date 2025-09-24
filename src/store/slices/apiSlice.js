@@ -29,8 +29,7 @@ export const apiSlice = createApi({
         // Add sorting
         if (sortBy) params.append('sortBy', sortBy)
         if (order) params.append('order', order)
-        
-        const queryString = params.toString()
+          const queryString = params.toString()
         return queryString ? `${url}?${queryString}` : url
       },
       providesTags: ['Product'],

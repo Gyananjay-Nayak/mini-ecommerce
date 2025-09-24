@@ -4,9 +4,11 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useState } from 'react'
 import { categoryImageMap } from '@/constants/categoryImages'
+import { useDispatch } from 'react-redux'
+import { setCategory } from '@/store/slices/filtersSlice'
 
 
-const PLACEHOLDER_IMAGE = 'https://via.placeholder.com/400x300/ef4444/ffffff?text=Category'
+const PLACEHOLDER_IMAGE = '/images/common/placeholder.jpg'
 
 const featuredCategoryIds = [
   'furniture',
@@ -20,6 +22,7 @@ const featuredCategoryIds = [
 export default function FeaturedCategories() {
   const { data: categories, isLoading, error } = useGetCategoriesQuery()
   const [imageErrors, setImageErrors] = useState({})
+  const dispatch = useDispatch()
 
   const handleImageError = (categorySlug) => {
     setImageErrors(prev => ({ ...prev, [categorySlug]: true }))
@@ -71,6 +74,9 @@ export default function FeaturedCategories() {
           key={category.slug}
           href={`/products?category=${category.slug}`}
           className="group text-center hover:transform hover:scale-105 transition-all duration-300"
+          onClick={() => {
+            dispatch(setCategory(category.slug))
+          }}
         >
           <div className="relative overflow-hidden rounded-2xl mb-3 aspect-square bg-gray-100 group-hover:shadow-lg">
             <Image

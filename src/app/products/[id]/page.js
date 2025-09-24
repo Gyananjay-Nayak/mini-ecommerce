@@ -16,7 +16,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { HeartIcon as HeartIconSolid, StarIcon as StarIconSolid } from '@heroicons/react/24/solid'
 
-const PLACEHOLDER = 'https://via.placeholder.com/500x500/ef4444/ffffff?text=Product'
+const PLACEHOLDER = '/images/common/placeholder.jpg'
 
 export default function ProductDetailPage() {
   const params = useParams()
@@ -167,11 +167,11 @@ export default function ProductDetailPage() {
 
               {/* Price */}
               <div className="flex items-center gap-3 mb-4">
-                <span className="text-3xl font-bold">${discountedPrice.toFixed(2)}</span>
+                <span className="text-3xl font-bold">₹{discountedPrice.toFixed(2)}</span>
                 {product.discountPercentage > 0 && (
                   <>
                     <span className="text-xl text-gray-500 line-through">
-                      ${product.price.toFixed(2)}
+                      ₹{product.price.toFixed(2)}
                     </span>
                     <span className="bg-red-100 text-red-800 px-2 py-1 rounded text-sm">
                       {Math.round(product.discountPercentage)}% OFF

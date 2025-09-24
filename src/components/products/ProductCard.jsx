@@ -7,7 +7,7 @@ import Image from 'next/image'
 import { StarIcon, HeartIcon } from '@heroicons/react/24/outline'
 import { HeartIcon as HeartIconSolid, ShoppingCartIcon } from '@heroicons/react/24/solid'
 
-const PRODUCT_PLACEHOLDER = 'https://via.placeholder.com/300x300/ef4444/ffffff?text=Product'
+const PRODUCT_PLACEHOLDER = '/images/common/placeholder.jpg'
 
 export default function ProductCard({ product }) {
   const dispatch = useDispatch()

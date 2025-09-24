@@ -10,7 +10,7 @@ import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid'
 import QuantitySelector from '@/components/common/QuantitySelector'
 import Button from '@/components/common/Button'
 
-const PRODUCT_PLACEHOLDER = 'https://via.placeholder.com/200x200/ef4444/ffffff?text=Product'
+const PRODUCT_PLACEHOLDER = '/images/common/placeholder.jpg'
 
 export default function CartItem({ item }) {
   const dispatch = useDispatch()
